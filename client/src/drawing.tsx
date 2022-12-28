@@ -45,10 +45,10 @@ export default function Drawing({ width, height }: DrawingProps) {
       const canvas = canvasRef.current;
       // For supporting computers with higher screen densities, we double the screen density
       console.log(canvas.width);
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      canvas.style.width = `${canvas.offsetWidth}px`;
-      canvas.style.height = `${canvas.offsetHeight}px`;
+      canvas.width = 238;
+      canvas.height = 154;
+      canvas.style.width = `${238}px`;
+      canvas.style.height = `${154}px`;
       // Setting the context to enable us draw
       const ctx = canvas.getContext("2d");
 
