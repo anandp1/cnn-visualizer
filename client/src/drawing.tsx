@@ -20,11 +20,38 @@ export default function Drawing({ width, height }: DrawingProps) {
   const stopDraw = () => {
     ctxRef.current.closePath();
     setDrawing(false);
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+
+      const matrix = Array.from(
+        Array(canvas.height),
+        () => new Array(canvas.width)
+      );
+
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          let imgd = ctxRef.current.getImageData(
+            x,
+            y,
+            canvas.width,
+            canvas.height
+          );
+          let pix = imgd.data;
+          // 4 because there are 4 channels
+          let pos = (y * canvas.width + x) * 4; // position of the pixel
+
+          matrix[y][x] = (pix[pos] + pix[pos + 1] + pix[pos + 2]) / 3; //red
+          // pix[pos] = red
+          // pix[pos + 1] = blue
+          // pix[pos + 2]=  green
+          // pix[pos + 3] = alpha
+        }
+      }
+    }
   };
   const draw = ({ nativeEvent }: any) => {
     if (!drawing) return;
     const { offsetX, offsetY } = nativeEvent;
-    // console.log(ctxRef);
     ctxRef.current.lineTo(offsetX, offsetY);
     ctxRef.current.stroke();
   };

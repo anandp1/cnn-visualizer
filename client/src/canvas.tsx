@@ -15,10 +15,13 @@ const Canvas = () => {
   }, []);
 
   return (
-    <div className="w-60 border bg-black opacity-25 flex flex-col">
-      <p className="text-white">Draw Number Here</p>
+    <div className="w-60 border  flex flex-col">
+      <p className="text-white bg-black opacity-25">Draw Number Here</p>
       {/* {width > 0 && height > 0 && ( */}
-      <div className="bg-black border border-white opacity-100" ref={ref}>
+      <div
+        className="border bg-black opacity-25 border-white hover:opacity-100 hover:cursor-cell"
+        ref={ref}
+      >
         <Drawing width={width} height={height} />
       </div>
       {/* )} */}
