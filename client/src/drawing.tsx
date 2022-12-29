@@ -6,7 +6,6 @@ interface DrawingProps {
 }
 
 export default function Drawing({ width, height }: DrawingProps) {
-  //   console.log(width, height);
   const [drawing, setDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<any>(null);
@@ -71,7 +70,6 @@ export default function Drawing({ width, height }: DrawingProps) {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       // For supporting computers with higher screen densities, we double the screen density
-      console.log(canvas.width);
       canvas.width = 238;
       canvas.height = 154;
       canvas.style.width = `${238}px`;
@@ -79,10 +77,7 @@ export default function Drawing({ width, height }: DrawingProps) {
       // Setting the context to enable us draw
       const ctx = canvas.getContext("2d");
 
-      //   console.log(ctx);
-
       if (ctx) {
-        // ctx.scale(2, 2);
         ctx.lineCap = "round";
         ctx.strokeStyle = "white";
         ctx.lineWidth = 20;
