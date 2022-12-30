@@ -1,12 +1,17 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 interface DrawingProps {
   width: number;
   height: number;
+  setPrediction: Dispatch<SetStateAction<number | undefined>>;
 }
 
-export default function Drawing({ width, height }: DrawingProps) {
+export default function Drawing({
+  width,
+  height,
+  setPrediction,
+}: DrawingProps) {
   const [drawing, setDrawing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ctxRef = useRef<any>(null);
@@ -20,6 +25,7 @@ export default function Drawing({ width, height }: DrawingProps) {
   const stopDraw = async () => {
     ctxRef.current.closePath();
     setDrawing(false);
+
     if (canvasRef.current) {
       const canvas = canvasRef.current;
 
@@ -28,15 +34,11 @@ export default function Drawing({ width, height }: DrawingProps) {
         () => new Array(canvas.width)
       );
 
+      let imgd = ctxRef.current.getImageData(0, 0, canvas.width, canvas.height);
+      let pix = imgd.data;
+
       for (let y = 0; y < canvas.height; y++) {
         for (let x = 0; x < canvas.width; x++) {
-          let imgd = ctxRef.current.getImageData(
-            x,
-            y,
-            canvas.width,
-            canvas.height
-          );
-          let pix = imgd.data;
           // 4 because there are 4 channels
           let pos = (y * canvas.width + x) * 4; // position of the pixel
 
@@ -47,9 +49,15 @@ export default function Drawing({ width, height }: DrawingProps) {
           // pix[pos + 3] = alpha
         }
       }
-      await axios.post("/predict", {
+
+      // console.log(matrix);
+
+      const response = await axios.post("/predict", {
         matrix,
       });
+
+      console.log(response);
+      setPrediction(response.data.prediction);
     }
   };
   const draw = ({ nativeEvent }: any) => {

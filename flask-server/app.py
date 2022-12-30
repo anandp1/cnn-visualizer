@@ -4,12 +4,14 @@ from predict import predict_digit
 
 app = Flask(__name__)
 
-# Members API Route
 @app.route("/predict", methods=["POST"])
 def predict():
     print("here");
     data = request.get_json(force=True)
-    return predict_digit(data)
+    test = predict_digit(data)
+
+    print(test)
+    return {"prediction" : int(test)}
 
 if __name__ == "__main__":
     app.run(debug=True)
