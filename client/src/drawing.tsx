@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 
 interface DrawingProps {
@@ -16,7 +17,7 @@ export default function Drawing({ width, height }: DrawingProps) {
     ctxRef.current.moveTo(offsetX, offsetY);
     setDrawing(true);
   };
-  const stopDraw = () => {
+  const stopDraw = async () => {
     ctxRef.current.closePath();
     setDrawing(false);
     if (canvasRef.current) {
@@ -46,6 +47,9 @@ export default function Drawing({ width, height }: DrawingProps) {
           // pix[pos + 3] = alpha
         }
       }
+      await axios.post("/predict", {
+        matrix,
+      });
     }
   };
   const draw = ({ nativeEvent }: any) => {
