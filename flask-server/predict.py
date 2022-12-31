@@ -1,6 +1,15 @@
 from keras.models import load_model
 import numpy as np
+from keras.models import Model
 import tensorflow as tf
+
+firstCovLayer = 'conv0'  # (None, 26, 26, 32)
+secondCovLayer = 'conv1'  # (None, 24, 24, 32)
+thirdCovLayer = 'conv2'  # (None, 10, 10, 64)
+fourthCovLayer = 'conv3'  # (None, 8, 8, 64)
+flattenLayer = 'flatten_1'  # (None, 1024)
+fullyConnectedLayer = 'fc1'  # (None, 254)
+outputLayer = 'fco'  # (None, 10)
 
 
 def infer_prec(img, img_size):
@@ -21,7 +30,24 @@ def predict_digit(data):
 
     img = infer_prec(npArr, 28)
 
-    predictArr = model.predict(img)
-    test = np.argmax(predictArr)
+    modelLayers = {"firstCovLayer": firstCovLayer, "secondCovLayer": secondCovLayer, "thirdCovLayer": thirdCovLayer,
+                   "fourthCovLayer": fourthCovLayer, "flattenLayer": flattenLayer, "fullyConnectedLayer": fullyConnectedLayer, "outputLayer": outputLayer}
 
-    return test
+    modelLayerOutputs = {}
+    for layer in modelLayers:
+        modelLayerOutput = getLayerOutput(
+            modelLayers[layer], model, img)
+        modelLayerOutputs[layer] = np.vstack(modelLayerOutput.T).tolist()
+
+    predictArr = model.predict(img)
+    prediction = np.argmax(predictArr)
+
+    return {'prediction': int(prediction), 'modelLayerOutputs': modelLayerOutputs}
+
+
+def getLayerOutput(layerName, model, img):
+    intermediateLayerModel = Model(inputs=model.input,
+                                   outputs=model.get_layer(layerName).output)
+    intermediateLayerOutput = intermediateLayerModel.predict(img)
+
+    return intermediateLayerOutput

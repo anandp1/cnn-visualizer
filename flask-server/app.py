@@ -9,9 +9,9 @@ app = Flask(__name__)
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json(force=True)
-    test = predict_digit(data)
+    predictedDigitData = predict_digit(data)
 
-    return {"prediction": int(test)}
+    return {"prediction": predictedDigitData["prediction"], 'modelLayerOutputs': predictedDigitData["modelLayerOutputs"]}
 
 
 if __name__ == "__main__":

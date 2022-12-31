@@ -34,7 +34,7 @@ const Canvas = () => {
           // 4 because there are 4 channels
           let pos = (y * canvas.width + x) * 4; // position of the pixel
 
-          matrix[y][x] = (pix[pos] + pix[pos + 1] + pix[pos + 2]) / 3; //red
+          matrix[y][x] = (pix[pos] + pix[pos + 1] + pix[pos + 2]) / 3; // grayscale
           // pix[pos] = red
           // pix[pos + 1] = blue
           // pix[pos + 2]=  green
@@ -88,7 +88,7 @@ const Canvas = () => {
   }, []);
 
   return (
-    <div className="w-60 border flex flex-col">
+    <div className="w-60 border flex flex-col absolute right-0 bottom-0">
       <p className="text-white bg-black opacity-25">Draw Number Here</p>
       <div className="border bg-black opacity-25 border-white hover:opacity-100 hover:cursor-cell">
         <canvas
