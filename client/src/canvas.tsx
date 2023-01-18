@@ -34,21 +34,31 @@ const Canvas = () => {
   };
 
   const drawMatrix = () => {
-    const z = matrix.map((c) =>
-      c.map((c) => [
-        Math.abs(c * 255),
-        Math.abs(c * 255),
-        Math.abs(c * 255),
-        255,
-      ])
-    );
-    const i = new ImageData(Uint8ClampedArray.from(z.flat(2)), 26);
+    const width = matrix[0].length;
+    const height = matrix.length;
+
+    const transpose = (matrix: any[][]) => {
+      let [row] = matrix;
+      return row.map((value, column) => matrix.map((row) => row[column]));
+    };
+    const newMatrix = transpose(matrix);
+
+    let flatArray: any[] = [];
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height; j++) {
+        flatArray = flatArray.concat([
+          Math.abs(newMatrix[i][j] * 255),
+          Math.abs(newMatrix[i][j] * 255),
+          Math.abs(newMatrix[i][j] * 255),
+          255,
+        ]);
+      }
+    }
+
+    const i = new ImageData(Uint8ClampedArray.from(flatArray), height, width);
+    // ctx2Ref.current.scale(-1, 1);
+    // ctx2Ref.current.translate(-width, 0);
     ctx2Ref.current.putImageData(i, 0, 0);
-    // ctx2Ref.current.scale(16, 16);
-    ctx2Ref.current.webkitImageSmoothingEnabled = false;
-    ctx2Ref.current.mozImageSmoothingEnabled = false;
-    ctx2Ref.current.imageSmoothingEnabled = false;
-    ctx2Ref.current.drawImage(canvas2Ref, 0, 0);
   };
 
   const stopDraw = async () => {
